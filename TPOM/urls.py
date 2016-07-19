@@ -18,8 +18,6 @@ from django.contrib import admin
 
 from django.views.generic import TemplateView
 
-from rest_framework.urlpatterns import format_suffix_patterns
-
 from tvsa import views
 
 urlpatterns = [
@@ -28,9 +26,5 @@ urlpatterns = [
     url(r'^api/get-shift-dates/$', views.ShiftDateList.as_view()),
 
     url(r'^schedule/$', TemplateView.as_view(template_name='schedule.html'), name='schedule'),
-
-
-
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)

@@ -23,7 +23,7 @@ class ShiftList(View):
 
             qs_list = list()
             for x in qs:
-                qs_dict = {}
+                qs_dict = dict()
                 qs_dict['id'] = str(x.pk)
                 qs_dict['volunteer'] = x.volunteer.__unicode__()
                 qs_dict['resource'] = x.job.__unicode__()
