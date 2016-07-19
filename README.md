@@ -11,6 +11,8 @@ There is also a data importer script, which uses a spreadsheet/csv from a differ
 
 This app is designed to interact with and enhance the volunteer, role, shift, and job information related to the TPOM Member Sale volunteers.
 
+Rough sketch ERD over dinner:
+![alt tag](image.png)
 
 ### To Do:
 dummy csv file for example data
