@@ -1,0 +1,133 @@
+<html>
+<head>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+
+
+
+
+
+
+
+            google.charts.load('current', {'packages':['gantt']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            $(document).on("change", "#date_selector", drawChart);
+
+            function drawChart() {
+
+                var date_selection = $('#date_selector').val();
+                $('#date_selection').text($('#date_selector option[value=' + date_selection + ']').text());
+
+                var jsonData = $.ajax({
+                    url: "/api/get-schedule/",
+                    type : "GET",
+                    dataType: "json",
+                    data : {
+                        date_selection : date_selection
+                    },
+                    async: false
+                }).responseText;
+
+                // Create our data table out of JSON data loaded from server.
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn('string','Shift ID');
+                dataTable.addColumn('string', 'Volunteer Name');
+                dataTable.addColumn('string', 'Resource');
+                dataTable.addColumn('date', 'Start Time');
+                dataTable.addColumn('date', 'End Time');
+                dataTable.addColumn('number', 'Duration');
+                dataTable.addColumn('number', 'Percent Complete');
+                dataTable.addColumn('string', 'Dependencies');
+
+
+                var json = JSON.parse(jsonData);
+
+                for (var i=0;i<json.length;i++) {
+                    var row = [];
+                    row.push(json[i].id);
+                    row.push(json[i].volunteer);
+                    row.push(json[i].resource);
+
+                    var start_time = new Date(json[i].start_time);
+                    start_time.setHours(start_time.getHours() + 4);
+                    var end_time = new Date(json[i].end_time);
+                    end_time.setHours(end_time.getHours() + 4);
+
+                    console.log(start_time);
+                    console.log(end_time);
+                    row.push(start_time);
+                    row.push(end_time);
+                    row.push(null);
+                    row.push(0);
+                    row.push(null);
+                    dataTable.addRow(row);
+                }
+
+                var options = {
+                    'legend': 'left',
+                    'gantt': {
+                        'trackHeight': 15,
+                        'barHeight': 12,
+                        'percentEnabled': false
+                    },
+                };
+
+
+                var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+                google.visualization.events.addListener(chart, 'onmouseover', function(hover){
+                    if(hover){
+                        $('.google-visualization-tooltip-item:eq(1)').remove(); // remove the other info
+                    }
+                });
+
+
+                chart.draw(dataTable, options);
+            }
+
+
+        });
+    </script>
+
+    <style>
+        #chart_div {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            height: 2000px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-2">
+            <select class="select form-control" id="date_selector">
+                <option value="2016-08-04" selected="selected">Thursday - August 4th, 2016</option>
+                <option value="2016-08-05">Friday - August 5th, 2016</option>
+                <option value="2016-08-06">Saturday - August 6th, 2016</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2 id="date_selection"></h2>
+            <hr>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div id="chart_div"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
