@@ -15,4 +15,4 @@ This app is designed to interact with and enhance the volunteer, role, shift, an
 ![alt tag](example_images/rough_sketch_erd.png)
 
 ### To Do:
-dummy csv file for example data
+Legend for Gantt chart to represent the Job/Resource color scheme
