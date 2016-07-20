@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from django.core.exceptions import ValidationError
+
 
 from .models import (Volunteer, Role, Shift, GroupShift, Job)
 
@@ -138,15 +140,18 @@ class AssignedManagerListFilter(admin.SimpleListFilter):
         provided in the query string and retrievable via
         `self.value()`.
         """
-        manager_pk = self.value()
-        return queryset.filter(managers_in_charge__pk=manager_pk)
+        if self.value():
+            manager_pk = self.value()
+            return queryset.filter(managers_in_charge__pk=manager_pk)
 
 
 class RoleAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'manager')
 
+
 class JobAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'heavy_lifting')
+
 
 class ShiftAdmin(admin.ModelAdmin):
     list_display = ('volunteer', 'job', 'get_phone_number', 'get_managers', 'date', 'start_time', 'end_time', 'group_shift')
@@ -171,11 +176,9 @@ class ShiftAdmin(admin.ModelAdmin):
         return form
 
 
-
-
-
 class GroupShiftAdmin(admin.ModelAdmin):
     list_display = ('__unicode__',)
+
 
 class VolunteerAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'role')
