@@ -8,6 +8,7 @@ from datetime import datetime
 
 import json
 
+
 class ShiftList(View):
     def get(self, request, *args, **kwargs):
 
@@ -29,9 +30,6 @@ class ShiftList(View):
                 qs_dict['resource'] = x.job.__unicode__()
                 qs_dict['start_time'] = datetime.combine(x.date, x.start_time).isoformat()
                 qs_dict['end_time'] = datetime.combine(x.date, x.end_time).isoformat()
-                qs_dict['duration'] = 'null'
-                qs_dict['percent_complete'] = 'null'
-                qs_dict['dependencies'] = 'null'
                 qs_list.append(qs_dict)
 
             return json.dumps(qs_list, sort_keys=True)
@@ -43,7 +41,6 @@ class ShiftList(View):
 
 class ShiftDateList(View):
     def get(self, request, *args, **kwargs):
-
 
         shifts = Shift.objects.all()
         date_set = set()
