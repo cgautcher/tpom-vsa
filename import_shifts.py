@@ -15,7 +15,7 @@ import csv
 
 from tvsa.models import (Volunteer, Role, Shift, GroupShift, Job)
 
-f = open('tvsa_shift_info.csv', 'rU')
+f = open(sys.argv[1], 'rU')
 reader = csv.DictReader(f)
 
 for row in reader:
